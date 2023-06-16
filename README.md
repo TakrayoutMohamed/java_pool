@@ -141,24 +141,125 @@ When defining our variables, we can use any character literal, and they will get
 
 
 #   Objects vs. Primitives
-    Java provides two types of data representation: primitive types and reference types.
+
+Java provides two types of data representation: primitive types and reference types.
 In this section, we'll discuss the differences between the two with regards to initialization.
 
 Java has eight built-in data types, referred to as Java primitive types; variables of this type hold their values directly.
 
-<h5 Reference > types hold references to objects (instances of classes). Unlike primitive types that hold their values in the memory where the variable is allocated, references don't hold the value of the object they refer to.
+<h5> Reference</h5> types hold references to objects (instances of classes). Unlike primitive types that hold their values in the memory where the variable is allocated, references don't hold the value of the object they refer to.
 
 Instead, a reference points to an object by storing the memory address where the object is located.
 
 Note that Java doesn't allow us to discover what the physical memory address is. Rather, we can only use the reference to refer to the object.
 
 Let's look at an example that declares and initializes a reference type out of our User class:
-`
-@Test
-public void whenIntializedWithNew_thenInstanceIsNotNull() {
-    User user = new User();
- 
-    assertThat(user).isNotNull();
-}
-`
+
+    @Test
+    public void whenIntializedWithNew_thenInstanceIsNotNull() {
+        User user = new User();
+    
+        assertThat(user).isNotNull();
+    }
+
 As we can see, a reference can be assigned to a new object by using the keyword new, which is responsible for creating the new User object.
+## 4.Creating Objects
+Unlike with primitives, objects creation is a bit more complex. This is because we're not just adding the value to the field; instead, we trigger the initialization using the new keyword. This, in return, invokes a constructor and initializes the object in memory.
+Let's discuss constructors and the new keyword in further detail.
+The new keyword is responsible for allocating memory for the new object through a constructor.
+A constructor is typically used to initialize instance variables representing the main properties of the created object.
+If we don't supply a constructor explicitly, the compiler will create a default constructor which has no arguments, and just allocates memory for the object.
+A class can have many constructors, as long as their parameters lists are different (overload). Every constructor that doesn't call another constructor in the same class has a call to its parent constructor, whether it was written explicitly or inserted by the compiler through super().
+Let's add a constructor to our User class:
+
+	public User(String name, int id) {
+		this.name = name;
+		this.id = id;
+	}
+
+Now we can use our constructor to create a User object with initial values for its properties:
+
+	User user = new User("Alice", 1);
+
+## 5. Variable Scope
+In the following sections, we'll look at the different types of scopes that a variable in Java can exist within, and how this affects the initialization process
+
+# 5.1. Instance and Class Variables
+
+Instance and class variables don't require us to initialize them. As soon as we declare these variables, they're given a default value:
+
+|**type**   | **Default value**|
+|:----------|:----------------:|
+| boolean   | false                |
+| byte,short,int,long     | 0               |
+| float, double       | 0.0          	   |
+| char      | '\u0000'               |
+| Reference Type     | null               |
+
+	@Test
+	public void whenValuesAreNotInitialized_thenUserNameAndIdReturnDefault() {
+		User user = new User();
+	
+		assertThat(user.getName()).isNull();
+		assertThat(user.getId() == 0);
+	}
+
+# 5.2. Local Variables
+Local variables must be initialized before use, as they don't have a default value and the compiler won't let us use an uninitialized value
+For example, the following code generates a compiler error:
+
+	public void print(){
+		int i;
+		System.out.println(i);
+	}
+
+## 6. The Final Keyword
+The final keyword applied to a field means that the field's value can no longer be changed after initialization. In this way, we can define constants in Java.
+Let's add a constant to our User class:
+
+	private static final int YEAR = 2000;
+
+Constants must be initialized either when they're declared or in a constructor.
+
+## 7. Initializers in Java
+In Java, an initializer is a block of code that has no associated name or data type and is placed outside of any method, constructor, or another block of code.
+Java offers two types of initializers, static and instance initializers. Let's see how we can use each of them.
+# 7.1. Instance Initializers
+We can use these to initialize instance variables.
+To demonstrate, we'll provide a value for a user id using an instance initializer in our User class:
+
+	{
+		id = 0;
+	}
+
+# 7.2. Static Initialization Block
+A static initializer, or static block, is a block of code which is used to initialize static fields. In other words, it’s a simple initializer marked with the keyword static:
+
+	private static String forum;
+	static {
+		forum = "Java";
+	}
+
+## 8. Order of Initialization
+When writing code that initializes different types of fields, we have to keep an eye on the order of initialization.
+In Java, the order for initialization statements is as follows:
+ * static variables and static initializers in order
+ * instance variables and instance initializers in order
+ * constructors
+
+## 9. Object Life Cycle
+Now that we've learned how to declare and initialize objects, let's discover what happens to objects when they're not in use.
+Unlike other languages where we have to worry about object destruction, Java takes care of obsolete objects through its garbage collector.
+**All objects in Java are stored in our program's heap memory.** in fact, the heap represents a large pool of unused memory allocated for our Java application.
+On the other hand, the garbage collector is a Java program that takes care of automatic memory management by deleting objects that are no longer reachable.
+For a Java object to become unreachable, it has to encounter one of the following situations:
+
+* The object no longer has any references pointing to it.
+* All references pointing to the object are out of scope.
+
+
+In conclusion, an object is first created from a class, usually using the keyword new. Then the object lives its life, and provides us with access to its methods and fields.
+Finally, when it's no longer needed, the garbage collector destroys it.
+
+
+
