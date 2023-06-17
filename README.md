@@ -112,7 +112,7 @@ Here's how we declare boolean:
 `boolean b;`
 Declaring it without a value defaults to false. boolean is the cornerstone of controlling our programs flow. We can use boolean operators on them (e.g., and, or, etc.).
 
-2. 8. char
+**2.8. char**
 The final primitive data type to look at is char.
 
 Also called a character, char is a 16-bit integer representing a Unicode-encoded character. Its range is from 0 to 65,535. In Unicode, this represents __\u0000__ to __\uffff__.
@@ -128,6 +128,36 @@ Let's now declare a char:
 `char c;`
 
 When defining our variables, we can use any character literal, and they will get automatically transformed into their Unicode encoding for us. A character's default value is ‘/u0000'.
+
+**2.9. Overflow**
+The primitive data types have size limits. But what happens if we try to store a value that's larger than the maximum value?
+
+We run into a situation called overflow.
+
+When an integer overflows, it rolls over to the minimum value and begins counting up from there.
+
+Floating point numbers overflow by returning Infinity:
+
+	int i = Integer.MAX_VALUE;
+	int j = i + 1;
+	// j will roll over to -2_147_483_648
+
+	double d = Double.MAX_VALUE;
+	double o = d + 1;
+	// o will be Infinity
+
+Underflow is the same issue except it involves storing a value smaller than the minimum value. When the numbers underflow, they return 0.0.
+
+
+**2.10. Autoboxing**
+Each primitive data type also has a full Java class implementation that can wrap it. For instance, the Integer class can wrap an int. There is sometimes a need to convert from the primitive type to its object wrapper.
+
+Luckily, Java can perform this conversion for us automatically, a process called Autoboxing:
+
+	Character c = 'c';
+
+	Integer i = 1;
+
 
 
 
@@ -260,6 +290,41 @@ For a Java object to become unreachable, it has to encounter one of the followin
 
 In conclusion, an object is first created from a class, usually using the keyword new. Then the object lives its life, and provides us with access to its methods and fields.
 Finally, when it's no longer needed, the garbage collector destroys it.
+
+## 10. Other Methods for Creating Objects
+
+In this section, we’ll take a brief look at ***methods other than the new keyword for creating objects, and learn how to apply them, specifically reflection, cloning, and serialization***
+1. __Reflection__ 
+**__Reflection__ is a mechanism we can use to inspect classes,fields, and methods at run-time.** Here is an example of creating our User object using reflection:
+
+	@Test
+	public void whenInitializedWithReflection_thenInstanceIsNotNull() throws Exception {
+		User user = User.class.getConstructor(String.class, int.class).newInstance("Alvares", 2);
+		assertThat(user).isNotNull();
+	}
+
+In this case, we're using reflection to find and invoke a constructor of the User class.
+
+2. __cloning__
+The next method, **cloning, is a way to create an exact copy of an object**. For this, our User class must implement the Cloneable interface:
+
+	public class User implements Cloneable { //... }
+
+Now we can use the clone() method to create a new clonedUser object that has the same property values as the user object:
+
+	@Test
+	public void whenCopiedWithClone_thenExactMatchIsCreated() throws CloneNotSupportedException {
+		User user = new User("Alice", 3);
+		User clonedUser = (User) user.clone();
+
+		asserThat(clonedUser).isEqualTo(user);
+	}
+
+We can also use the sun.misc.Unsafe class to allocate memory for an object without calling a constructor:
+	User u = (User) unsafeInstance.allocateInstance(User.class);
+
+
+
 
 
 
