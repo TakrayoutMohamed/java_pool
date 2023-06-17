@@ -112,7 +112,7 @@ Here's how we declare boolean:
 `boolean b;`
 Declaring it without a value defaults to false. boolean is the cornerstone of controlling our programs flow. We can use boolean operators on them (e.g., and, or, etc.).
 
-**2.8. char**
+2. 8. char
 The final primitive data type to look at is char.
 
 Also called a character, char is a 16-bit integer representing a Unicode-encoded character. Its range is from 0 to 65,535. In Unicode, this represents __\u0000__ to __\uffff__.
