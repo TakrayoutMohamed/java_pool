@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.lang.Boolean;
 
 class   Programe
 {
