@@ -5,7 +5,7 @@ class Program
         int nbr;
         int sum;
 
-        nbr = 479598;
+        nbr = 12901212;
         sum = 0;
         while (nbr > 0)
         {

@@ -251,9 +251,11 @@ Let's add a constant to our User class:
 
 Constants must be initialized either when they're declared or in a constructor.
 
+
 ## 7. Initializers in Java
 In Java, an initializer is a block of code that has no associated name or data type and is placed outside of any method, constructor, or another block of code.
 Java offers two types of initializers, static and instance initializers. Let's see how we can use each of them.
+
 # 7.1. Instance Initializers
 We can use these to initialize instance variables.
 To demonstrate, we'll provide a value for a user id using an instance initializer in our User class:
@@ -438,6 +440,12 @@ Let’s see a brief comparison between an interpreter and a compiler:
 | The compiled program is faster to run.|Interpreted programs are slower to run, but take less time to interpret than to compile and run.|
 | Consumes more memory due to intermediate code generation |Usually executes input code directly, thus it consumes less memory.|
 | Compiled language examples: Java, C++, Swift, C#    | Interpreted language examples: Ruby, Lisp, PHP, PowerShell|
+
+# 
+
+
+
+
 
 
 

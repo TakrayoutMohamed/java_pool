@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-class   Programe
+class   Program
 {
     private static boolean isDivider(int dividedBy, int nbr)
     {
