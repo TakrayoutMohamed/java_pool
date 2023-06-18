@@ -11,10 +11,10 @@ class   Program
     {
         int nbr;
         int i;
+        Scanner sc = new Scanner(System.in);
 
         i = 2;
         System.out.print("-> ");
-        Scanner sc = new Scanner(System.in);
         nbr = sc.nextInt();
         sc.close();
         if (nbr < 2)
