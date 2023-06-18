@@ -324,6 +324,113 @@ We can also use the sun.misc.Unsafe class to allocate memory for an object witho
 	User u = (User) unsafeInstance.allocateInstance(User.class);
 
 
+# how the compilers work:
+
+## Introduction
+
+Programming languages were created to allow developers to write human-readable source code. However, computers work with machine code, which people can hardly write or read. Thus, compilers translate the programming language’s source code to machine code dedicated to a specific machine.
+
+In this article, we’ll analyze the compilation process phases. Then, we’ll see the differences between compilers and interpreters. Finally, we’ll introduce examples of a few compilers of modern programming languages.
+
+
+## Compilation Phases:
+
+As we already mentioned, the compilation process converts high-level source code to a low-level machine code that can be executed by the target machine. Moreover, an essential role of compilers is to inform the developer about errors committed, especially syntax-related ones.
+The compilation process consists of several phases:
+
+ * Lexical analysis
+ * Syntax analysis
+ * Semantic analysis
+ * Intermediate code generation
+ * Optimization
+ * Code generation
+in this section, we will discuss each phase in detail.
+
+1. Lexical Analysis
+
+the first stage of the compilation process is lexical analysis. During this phase , the compiler splits source code into fragments called lexemes. A lexeme is an abstruct unit of a specific language's lexical system. Let's analyze a simple exemple:
+	String greeting = "hello";
+
+is the above statement, we have five lexemes:
+ * String
+ * greeting 
+ * = 
+ * "hello"
+ * ;
+
+After splitting code into lexemes, a sequence of tokens is created. The sequence of tokens is a final product of lexical analysis. Thus, lexical analysis is also often called tokenization. A token is an object that describes a lexeme. It gives information about the lexeme’s purpose, such as whether it’s a keyword, variable name, or string literal.
+Moreover, it stores the lexeme’s source code location data.
+
+2. Syntax Analysis
+
+During syntax analysis, the compiler uses a sequence of tokens generated in the first stage. Tokens are used to create a structure called an **abstract syntax tree** (AST), which is a tree that represents the logical structure of a program.
+In this phase, the compiler checks a grammatic structure of the source code and its syntax correctness. Meanwhile, any syntax errors result in a compilation error, and the compiler informs the developer about them.
+
+In brief, syntax analysis is responsible for two tasks:
+ * It checks source code for any syntax error .
+ * it generates an abstract syntax tree that the next stage uses.
+
+3. Semantic Analysis 
+
+In this stage, the compiler uses an abstract syntax tree to detect any semantic errors, for exemple :
+  * assigning the wrong type to a variable
+  * declaring variables with the same name in the same scope
+  * using an undeclared variable
+  * using language’s keyword as a variable name
+Semantic analysis can be divided into three steps:
+ * Type checking – inspects type match in assignment statements, arithmetic operations, functions, and method calls.
+ * Flow control checking – investigates if flow control structures are used correctly and if classes and objects are correctly accessed.
+ * Label checking – validates the use of labels and identifiers.
+
+To achieve all the above goals, during semantic analysis, the compiler makes a complete traversal of the abstract syntax tree. Semantic analysis finally produces an annotated AST that describes the values of its attributes.
+
+ 4. Intermediate Code Generation
+
+During the compilation process, a compiler can generate one or more intermediate code forms.
+
+**Intermediate code is machine-independent**. Thus, there is no need for unique compilers for every different machine. Besides, optimization techniques are easier to apply to intermediate code than machine code. Intermediate code has two forms of representation:
+
+ + * High-Level – similar to the source language. In this form, we can easily boost the performance of source code. However, it’s less preferred for enhancing the performance of the target machine.
+ + * Low-Level – close to the machine’s machine code. It’s preferred for making machine-related optimizations.
+
+5. Optimization
+
+**In the optimization phase, the compiler uses a variety of ways to enhance the efficiency of the code.**
+Certainly, the optimization process should follow three important rules:
+
+ + * The resulting code can’t change the original meaning of the program.
+ + * Optimization should focus on consuming fewer resources and speeding up the operation of the software.
+ + * The optimization process shouldn’t significantly impact the overall time of compilation.
+
+Let’s see a few examples of optimization techniques:
+
+  + + Function inlining – replacing the function call with its body.
+  + + Dead code elimination – compiler gets rid of code that is never executed, or if executed, its returned result isn’t used.
+  + + Loop fusion – executing, in one loop, operations from the adjacent loops that have the same iteration conditions.
+  + + Instruction combining – instructions realizing similar operations are combined into one; for example, x = x + 10; x = x – 7; could be replaced with x = x + 3;
+
+6. Code Generation
+
+ Finally, the compiler converts the optimized intermediate code to the machine code dedicated to the target machine. The final code should have the same meaning as source code and be efficient in terms of memory and CPU resource usage. Furthermore, the code generation process must also be efficient.
+
+7. Practical Exemple
+
+In the below flowchart, we can see an example of the compilation process of a simple statement.
+![alt text](./readmeImages/Compilation-Flow-Example-Algorithm-Flowchart-Example.webp?raw=true "compilation process")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
