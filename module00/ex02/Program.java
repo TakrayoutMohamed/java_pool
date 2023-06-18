@@ -2,17 +2,6 @@ package module00.ex02;
 import java.util.Scanner;
 
 public class Program {
-	private static int scanInput()
-	{
-		int queries;
-		Scanner sc = new Scanner(System.in);
-
-		System.out.format("-->");
-		queries = sc.nextInt();
-		// sc.close();
-		return (queries);
-	}
-
 	private static boolean isPrime(int nbr)
 	{
 		int	i;
@@ -48,18 +37,21 @@ public class Program {
 
 	public static void main(String[] args)
 	{
+		Scanner sc = new Scanner(System.in);
 		int	nbrRequest;
 		int	nbr;
 		
 		nbrRequest = 0;
 		do
 		{
-			nbr = scanInput();
+			System.out.format("-->");
+			nbr = sc.nextInt();
 			if (isPrime(sumNbr(nbr)))
 			{
 				nbrRequest++;
 			}
 		} while (nbr != 42);
+		sc.close();
 		System.out.format("   Count of coffee-request : "+nbrRequest);
 	}
 }

@@ -441,15 +441,111 @@ Let’s see a brief comparison between an interpreter and a compiler:
 | Consumes more memory due to intermediate code generation |Usually executes input code directly, thus it consumes less memory.|
 | Compiled language examples: Java, C++, Swift, C#    | Interpreted language examples: Ruby, Lisp, PHP, PowerShell|
 
-# 
+# Access Modifiers in Java (we will back to this part to detail it)
 
+In this tutorial, we're going over access modifiers in Java, which are used for setting the access level to classes, variables, methods, and constructors.
 
+Simply put, there are four access modifiers: public, private, protected and default (no keyword).
 
+Before we begin let's note that a top-level class can use public or default access modifiers only. At the member level, we can use all four.
 
+## 1 Default 
+When we don't use any keyword explicitly, Java will set a default access to a given class, method or property.
+The default access modifier is also called package-private, which means that all members are visible within the same package but aren't accessible from other packages:
 
+	package com.baeldung.accessmodifiers;
 
+	public class SuperPublic {
+		static void defaultMethod() {
+			...
+		}
+	}
 
+defaultMethod() is accessible in another class of the same package:
 
+	package com.baeldung.accessmodifiers;
+
+	public class Public {
+		public Public() {
+			SuperPublic.defaultMethod(); // Available in the same package.
+		}
+	}
+
+However, it's not available in other packages.
+
+## 2 Public
+
+If we add the public keyword to a class, method or property then we're making it available to the whole world, i.e. all other classes in all packages will be able to use it. This is the least restrictive access modifier:
+
+	package com.baeldung.accessmodifiers;
+
+	public class SuperPublic {
+		public static void publicMethod() {
+			...
+		}
+	}
+
+publicMethod() is available in another package:
+
+	package com.baeldung.accessmodifiers.another;
+
+	import com.baeldung.accessmodifiers.SuperPublic;
+
+	public class AnotherPublic {
+		public AnotherPublic() {
+			SuperPublic.publicMethod(); // Available everywhere. Let's note different package.
+		}
+	}
+
+## 3 Private
+
+Any method, property or constructor with the private keyword is accessible from the same class only. This is the most restrictive access modifier and is core to the concept of encapsulation. All data will be hidden from the outside world:
+
+	package com.baeldung.accessmodifiers;
+
+	public class SuperPublic {
+		static private void privateMethod() {
+			...
+		}
+		
+		private void anotherPrivateMethod() {
+			privateMethod(); // available in the same class only.
+		}
+	}
+
+In next example, we marked the privateId variable as private because we want to add some logic to the id generation. And, as we can see, we did the same thing with manager attribute because we don't want to allow direct modification of this field.
+
+	public class Employee {
+		private String privateId;
+		private boolean manager;
+		//...
+	}
+
+## 4 Protected
+
+Between public and private access levels, there's the protected access modifier.
+
+If we declare a method, property or constructor with the protected keyword, we can access the member from the same package (as with package-private access level) and in addition from all subclasses of its class, even if they lie in other packages:
+
+	package com.baeldung.accessmodifiers;
+
+	public class SuperPublic {
+		static protected void protectedMethod() {
+			...
+		}
+	}
+
+protectedMethod() is available in subclasses (regardless of the package):
+
+	package com.baeldung.accessmodifiers.another;
+
+	import com.baeldung.accessmodifiers.SuperPublic;
+
+	public class AnotherSubClass extends SuperPublic {
+		public AnotherSubClass() {
+			SuperPublic.protectedMethod(); // Available in subclass. Let's note different package.
+		}
+	}
 
 
 
