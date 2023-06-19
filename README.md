@@ -548,6 +548,311 @@ protectedMethod() is available in subclasses (regardless of the package):
 	}
 
 
+# Access Modifiers in Java (Detailed)
+
+## 1 Java ‘public’ Access Modifier
+
+### When to Use the Public Access Modifier
+
+Public classes and interfaces, along with public members, define an API. It's that part of our code that others can see and use to control the behavior of our objects.
+
+However, overusing the public modifier violates the Object-Oriented Programming (OOP) encapsulation principle and has a few downsides:
+
+ * It increases the size of an API, making it harder for clients to use
+ * It's becoming harder to change our code because clients rely on it — any future changes might break their code
+
+### Public Interfaces and Classes
+
+#### Public Interfaces
+
+A public interface defines a specification that can have one or more implementations. These implementations can be either provided by us or written by others.
+
+For example, the Java API exposes the Connection interface to define database connection operations, leaving actual implementation to each vendor. At run-time, we get the desired connection based on the project setup:
+
+	Connection connection = DriverManager.getConnection(url);
+
+The getConnection method returns an instance of a technology-specific implementation.
+
+#### Public Classes
+
+We define public classes so that clients can use their members by instantiation and static referencing:
+
+	assertEquals(0, new BigDecimal(0).intValue()); // instance member
+	assertEquals(2147483647, Integer.MAX_VALUE); // static member
+
+Moreover, we can design public classes for inheritance by using the optional abstract modifier. When we're using the abstract modifier, the class is like a skeleton that has fields and pre-implemented methods that any concrete implementation can use, in addition to having abstract methods that each subclass needs to implement.
+
+For example, the Java collections framework provides the AbstractList class as a basis for creating customized lists:
+
+	public class ListOfThree<E> extends AbstractList<E> {
+
+		@Override
+		public E get(int index) {
+			//custom implementation
+		}
+
+		@Override
+		public int size() {
+			//custom implementation
+		}
+
+	}
+
+So, we only have to implement the get() and size() methods. Other methods like indexOf() and containsAll() are already implemented for us
+
+#### Nested Public Classes and Interfaces
+
+Similar to public top-level classes and interfaces, nested public classes and interfaces define an API datatype. However, they are particularly useful in two ways:
+
+They indicate to the API end user that the enclosing top-level type and its enclosed types have a logical relationship and are used together
+
+They make our codebase more compact by reducing the number of source code files that we would've used if we'd declared them as top-level classes and interfaces
+
+An example is the Map.Entry interface from the core Java API:
+
+	for (Map.Entry<String, String> entry : mapObject.entrySet()) { }
+
+Making Map.Entry a nested interface strongly relates it to the java.util.Map interface and has saved us from creating another file inside the java.util package.
+
+### Public Methods
+
+Public methods enable users to execute ready-made operations. An example is the public toLowerCase method in the String API:
+
+	assertEquals("alex", "ALEX".toLowerCase());
+
+We can safely make a public method static if it doesn't use any instance fields. The parseInt method from the Integer class is an example of a public static method:
+
+	assertEquals(1, Integer.parseInt("1"));
+
+Constructors are usually public so that we can instantiate and initialize objects, although sometimes they might be private like in singletons.
+
+### Public Fields
+
+Public fields allow changing the state of an object directly. The rule of thumb is that we shouldn't use public fields. There are several reasons for this, as we're about to see
+
+#### Thread-Safety
+
+Using public visibility with non-final fields or final mutable fields is not thread-safe. We can't control changing their references or states in different threads.
+
+#### Taking Actions on Modifications
+
+We have no control over a non-final public field because its reference or state can be set directly.
+
+Instead, it's better to hide the fields using a private modifier and use a public setter:
+
+	public class Student {
+
+		private int age;
+		
+		public void setAge(int age) {
+			if (age < 0 || age > 150) {
+				throw new IllegalArgumentException();
+			}
+		
+			this.age = age;
+		}
+	}
+
+Public fields, mutable or immutable, are part of the client's contract. It's harder to change the data representation of these fields in a future release because clients may need to refactor their implementations.
+
+By giving fields private scope and using accessors, we have the flexibility to change the internal representation while maintaining the old data type as well
+
+	public class Student {
+
+		private StudentGrade grade; //new data representation
+	
+		public void setGrade(int grade) {        
+			this.grade = new StudentGrade(grade);
+		}
+
+		public int getGrade() {
+			return this.grade.getGrade().intValue();
+		}
+	}
+
+The only exception for using public fields is the use of static final immutable fields to represent constants:
+
+	public static final String SLASH = "/";
+
+
+
+
+
+
+
+## 2 Java ‘private’ Access Modifier
+
+## 3 Java ‘protected’ Access Modifier
+
+While elements declared as private can be accessed only by the class in which they're declared, the protected keyword allows access from sub-classes and members of the same package.
+
+By using the protected keyword, we make decisions about which methods and fields should be considered internals of a package or class hierarchy, and which are exposed to outside code.
+
+### Declaring protected Fields, Methods, and Constructors
+
+First, let's create a class named FirstClass containing a protected field, method, and constructor:
+
+	public class FirstClass {
+
+		protected String name;
+
+		protected FirstClass(String name) {
+			this.name = name;
+		}
+
+		protected String getName() {
+			return name;
+		}
+	}
+
+
+With this example, by using the protected keyword, we've granted access to these fields to classes in the same package as FirstClass and to sub-classes of FirstClass.
+
+### Accessing protected Fields, Methods, and Constructors
+
+#### From the Same Package
+
+Now, let's see how we can access protected fields by creating a new GenericClass declared in the same package as FirstClass:
+
+	public class GenericClass {
+
+		public static void main(String[] args) {
+			FirstClass first = new FirstClass("random name");
+			System.out.println("FirstClass name is " + first.getName());
+			first.name = "new name";
+		}
+	}
+
+As this calling class is in the same package as FirstClass, it's allowed to see and interact with all the protected fields, methods, and constructors.
+
+#### From a different Package
+
+Let's now try to interact with these fields from a class declared in a different package from FirstClass:
+
+	public class SecondGenericClass {
+
+		public static void main(String[] args) {
+			FirstClass first = new FirstClass("random name");
+			System.out.println("FirstClass name is "+ first.getName());
+			first.name = "new name";
+		}
+	}
+
+As we can see, we get compilation errors:
+
+
+	The constructor FirstClass(String) is not visible
+	The method getName() from the type FirstClass is not visible
+	The field FirstClass.name is not visible
+
+That's exactly what we were expecting by using the protected keyword.  This is because SecondGenericClass is not in the same package as FirstClass and does not subclass it.
+
+#### From a Sub-Class
+
+Let's now see what happens when we declare a class extending FirstClass but declared in a different package:
+
+	public class SecondClass extends FirstClass {
+		
+		public SecondClass(String name) {
+			super(name);
+			System.out.println("SecondClass name is " + this.getName());
+			this.name = "new name";
+		} 
+	}
+
+As expected, we can access all the protected fields, methods, and constructors. This is because SecondClass is a sub-class of FirstClass.
+
+
+### protected Inner Class
+
+In the previous examples, we saw protected fields, methods, and constructors in action. There is one more particular case — a protected inner class.
+
+Let's create this empty inner class inside our FirstClass:
+
+package com.baeldung.core.modifiers;
+
+	public class FirstClass {
+
+		// ...
+
+		protected static class InnerClass {
+
+		}
+	}
+
+As we can see, this is a static inner class, and so can be constructed from outside of an instance of FirstClass. However, as it is protected, we can only instantiate it from code in the same package as FirstClass.
+
+#### From the same Package
+
+To test this, let's edit out GenericClass
+
+	public class GenericClass {
+
+		public static void main(String[] args) {
+			// ...
+			FirstClass.InnerClass innerClass = new FirstClass.InnerClass();
+		}
+	}
+
+As we can see, we can instantiate the InnerClass without any problem because GenericClass is in the same package as FirstClass
+
+#### From a Different Package
+
+Let's try to instantiate an InnerClass from our SecondGenericClass which, as we remember, is outside FirstClass' package:
+
+	public class SecondGenericClass {
+
+		public static void main(String[] args) {
+			// ...
+
+			FirstClass.InnerClass innerClass = new FirstClass.InnerClass();
+		}
+	}
+
+As expected, we get a compilation error:
+
+	The type FirstClass.InnerClass is not visible
+
+#### From a Sub-Class
+
+Let's try to do the same from our SecondClass
+
+	public class SecondClass extends FirstClass {
+		
+		public SecondClass(String name) {
+			// ...
+	
+			FirstClass.InnerClass innerClass = new FirstClass.InnerClass();
+		}     
+	}
+
+We were expecting to instantiate our InnerClass with ease. However, we are getting a compilation error here too:
+
+	The constructor FirstClass.InnerClass() is not visible
+
+Let's take a look at our InnerClass declaration:
+
+	protected static class InnerClass {
+	}
+
+The main reason we are getting this error is that the default constructor of a protected class is implicitly protected. In addition, SecondClass is a sub-class of FirstClass but is not a sub-class of InnerClass.  Finally, we also declared SecondClass outside FirstClass' package.
+
+For all these reasons, SecondClass can't access the protected InnerClass constructor.
+
+If we wanted to solve this issue and allow our SecondClass to instantiate an InnerClass object, we could explicitly declare a public constructor:
+
+	protected static class InnerClass {
+		public InnerClass() {
+		}
+	}
+
+By doing this, we no longer get a compilation error, and we can now instantiate an InnerClass from SecondClass
+
+# done !!
+
+
+
+
 
 
 
