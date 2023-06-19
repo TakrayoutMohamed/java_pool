@@ -653,6 +653,8 @@ Instead, it's better to hide the fields using a private modifier and use a publi
 		}
 	}
 
+#### Changing the Data Type
+
 Public fields, mutable or immutable, are part of the client's contract. It's harder to change the data representation of these fields in a future release because clients may need to refactor their implementations.
 
 By giving fields private scope and using accessors, we have the flexibility to change the internal representation while maintaining the old data type as well
@@ -675,12 +677,128 @@ The only exception for using public fields is the use of static final immutable 
 	public static final String SLASH = "/";
 
 
-
-
-
-
-
 ## 2 Java ‘private’ Access Modifier
+
+The private access modifier is important because it allows encapsulation and information hiding, which are core principles of object-oriented programming. Encapsulation is responsible for bundling methods and data, while information hiding is a consequence of encapsulation — it hides an object's internal representation.
+
+The first thing to remember is that elements declared as private can be accessed only by the class in which they're declared.
+
+### Fields
+
+Now, we'll see some simple code examples to better understand the subject.
+
+First, let's create an Employee class containing a couple of private instance variables:
+
+	public class Employee {
+		private String privateId;
+		private boolean manager;
+		//...
+	}
+
+In this example, we marked the privateId variable as private because we want to add some logic to the id generation. And, as we can see, we did the same thing with manager attribute because we don't want to allow direct modification of this field.
+
+### Construclors
+
+Let's now create a private constructor:
+
+	private Employee(String id, String name, boolean managerAttribute) {
+		this.name = name;
+		this.privateId = id + "_ID-MANAGER";
+	}
+
+By marking our constructor as private, we can use it only from inside our class.
+
+Let's add a static method that will be our only way to use this private constructor from outside the Employee class:
+
+	public static Employee buildManager(String id, String name) {
+		return new Employee(id, name, true);
+	}
+
+Now we can get a manager instance of our Employee class by simply writing:
+
+	Employee manager = Employee.buildManager("123MAN","Bob");
+
+And behind the scenes, of course, the buildManager method calls our private constructor.
+
+### Methods
+
+Let's now add a private method to our class:
+
+	private void setManager(boolean manager) {
+		this.manager = manager;
+	}
+
+And let's suppose, for some reason, we have an arbitrary rule in our company in which only an employee named “Carl” can be promoted to manager, although other classes aren't aware of this. We'll create a public method with some logic to handle this rule that calls our private method:
+
+	public void elevateToManager() {
+		if ("Carl".equals(this.name)) {
+			setManager(true);
+		}
+	}
+
+### private in Action
+
+Let's see an example of how to use our Employee class from outside:
+
+	public class ExampleClass {
+
+		public static void main(String[] args) {
+			Employee employee = new Employee("Bob","ABC123");
+			employee.setPrivateId("BCD234");
+			System.out.println(employee.getPrivateId());
+		}
+	}
+
+After executing ExampleClass, we'll see its output on the console:
+
+	BCD234_ID
+
+In this example, we used the public constructor and the public method changeId(customId) because we can't access the private variable privateId directly.
+
+Let's see what happens if we try to access a private method, constructor, or variable from outside our Employee class:
+
+	public class ExampleClass {
+
+		public static void main(String[] args) {
+			Employee employee = new Employee("Bob","ABC123",true);
+			employee.setManager(true);
+			employee.privateId = "ABC234";
+		}
+	}
+
+We'll get compilation errors for each of our illegal statements:
+
+	The constructor Employee(String, String, boolean) is not visible
+	The method setManager(boolean) from the type Employee is not visible
+	The field Employee.privateId is not visible
+
+### Classes
+
+There is one special case where we can create a private class — as an inner class of some other class.
+
+Otherwise, if we were to declare an outer class as private, we'd be forbidding other classes from accessing it, making it useless:
+
+	public class PublicOuterClass {
+
+		public PrivateInnerClass getInnerClassInstance() {
+			PrivateInnerClass myPrivateClassInstance = this.new PrivateInnerClass();
+			myPrivateClassInstance.id = "ID1";
+			myPrivateClassInstance.name = "Bob";
+			return myPrivateClassInstance;
+		}
+
+		private class PrivateInnerClass {
+			public String name;
+			public String id;
+		}
+	}
+
+In this example, we created a private inner class inside our PublicOuterClass by specifying the private access modifier.
+
+Because we used the private keyword, if we, for some reason, try to instantiate our PrivateInnerClass from outside the PublicOuterClass, the code won't compile and we'll see the error:
+
+	PrivateInnerClass cannot be resolved to a type
+
 
 ## 3 Java ‘protected’ Access Modifier
 
