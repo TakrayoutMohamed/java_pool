@@ -158,18 +158,6 @@ Luckily, Java can perform this conversion for us automatically, a process called
 
 	Integer i = 1;
 
-
-
-
-
-
-
-
-
-
-
-
-
 #   Objects vs. Primitives
 
 Java provides two types of data representation: primitive types and reference types.
@@ -193,7 +181,9 @@ Let's look at an example that declares and initializes a reference type out of o
     }
 
 As we can see, a reference can be assigned to a new object by using the keyword new, which is responsible for creating the new User object.
+
 ## 4.Creating Objects
+
 Unlike with primitives, objects creation is a bit more complex. This is because we're not just adding the value to the field; instead, we trigger the initialization using the new keyword. This, in return, invokes a constructor and initializes the object in memory.
 Let's discuss constructors and the new keyword in further detail.
 The new keyword is responsible for allocating memory for the new object through a constructor.
@@ -253,10 +243,12 @@ Constants must be initialized either when they're declared or in a constructor.
 
 
 ## 7. Initializers in Java
+
 In Java, an initializer is a block of code that has no associated name or data type and is placed outside of any method, constructor, or another block of code.
 Java offers two types of initializers, static and instance initializers. Let's see how we can use each of them.
 
 # 7.1. Instance Initializers
+
 We can use these to initialize instance variables.
 To demonstrate, we'll provide a value for a user id using an instance initializer in our User class:
 
