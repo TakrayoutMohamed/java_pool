@@ -1,4 +1,3 @@
-package module01.ex00;
 import java.util.UUID;
 
 public class Transaction {
@@ -17,16 +16,23 @@ public class Transaction {
 
 	public Transaction(User recipient, User sender, Integer amount, Category category)
 	{
-		if (category == Category.OUTCOME && amount > 0)
+		if (category == Category.OUTCOME && amount > (Integer) 0)
 		{
 			System.out.println("Invalid transaction 1");
 			System.exit(-1);
 		}
-		else if (category == Category.INCOME && amount < 0)
+		else if (category == Category.INCOME && amount < (Integer) 0)
 		{
 			System.out.println("Invalid transaction 2");
 			System.exit(-1);
 		}
+		if (sender.getBalance() - amount < 0)
+		{
+			System.out.println("to make this transaction you still need "+(sender.getBalance() - amount));
+			System.exit(-1);
+		}
+		recipient.setBalance(recipient.getBalance() + amount);
+		sender.setBalance(sender.getBalance() - amount);
 		setCategory(category);
 		setRecipient(recipient);
 		setSender(sender);

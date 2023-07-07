@@ -1,16 +1,12 @@
-package module01.ex00;
-
 public class User {
     private Integer id;
     private String  name;
     private Integer balance;
 
-    public User(String name, Integer balance)
-    {
-        if (balance < 0)
+    public User(String name, Integer balance){
+        if (balance < (Integer) 0)
         {
-            System.out.println("invalid balance");
-            System.exit(-1);
+            balance = 0;
         }
         setName(name);
         setBalance(balance);
